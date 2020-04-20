@@ -9,7 +9,10 @@ import org.bukkit.entity.Player
 class CheckCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            sender.teleport(TacticsMiners.gameManager.gameWorld.spawnLocation)
+            TacticsMiners.gameManager.gameWorld?.spawnLocation?.let { sender.teleport(it) }
+                    ?: run {
+                        sender.sendMessage("World生成中です")
+                    }
             return true
         }
 

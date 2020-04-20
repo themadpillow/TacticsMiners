@@ -1,14 +1,15 @@
 package madpillow.tacticsMiners.team
 
-import jdk.internal.jline.internal.Nullable
+import madpillow.tacticsMiners.GamePlayer
 import madpillow.tacticsMiners.TacticsMiners
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Team
 
 class TeamUtils {
     companion object {
-        fun initCreateTeam(): List<Team> {
-            val teamList = ArrayList<Team>()
+        fun initCreateTeam(): List<GameTeam> {
+            val teamList = ArrayList<GameTeam>()
             TeamColor.values().forEach { teamColor ->
                 val scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
                 val team = scoreboard.registerNewTeam(teamColor.toString())
@@ -16,17 +17,17 @@ class TeamUtils {
                 team.prefix = "" + teamColor.getChatColor()
                 team.setAllowFriendlyFire(false)
 
-                teamList.add(team)
+                teamList.add(GameTeam(team))
             }
 
             return teamList
         }
 
-        fun divideTeam(teamSize: Int?) {
+        fun divideTeam(gamePlayerList: List<GamePlayer>, teamSize: Int?) {
             var iterator = 0
-            Bukkit.getOnlinePlayers().forEach { player ->
-                TacticsMiners.gameManager.teamList[iterator].addEntry(player.name)
-                if (iterator < teamSize ?: TacticsMiners.gameManager.teamList.size) {
+            gamePlayerList.forEach { gamePlayer ->
+                joinTeam(TacticsMiners.gameManager.gameTeamList[iterator], gamePlayer)
+                if (iterator < teamSize ?: TacticsMiners.gameManager.gameTeamList.size) {
                     iterator++
                 } else {
                     iterator = 0
@@ -35,11 +36,20 @@ class TeamUtils {
         }
 
         fun removeAllEntryAtAllTeam() {
-            TacticsMiners.gameManager.teamList.forEach { removeAllEntry(it) }
+            TacticsMiners.gameManager.gameTeamList.forEach { removeAllEntry(it.team) }
         }
 
         private fun removeAllEntry(team: Team) {
             team.entries.forEach { entity -> team.removeEntry(entity) }
+        }
+
+        fun getGamePlayerAtList(player: Player): GamePlayer? {
+            return TacticsMiners.gameManager.gamePlayerList.firstOrNull { gamePlayer -> gamePlayer.player == player }
+        }
+
+        fun joinTeam(gameTeam: GameTeam, gamePlayer: GamePlayer) {
+            gameTeam.team.addEntry(gamePlayer.player.name)
+            gamePlayer.gameTeam = gameTeam
         }
     }
 }
