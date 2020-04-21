@@ -22,6 +22,7 @@ class MissionInventoryListener : Listener {
         if (e.clickedInventory == e.view.bottomInventory) {
             val itemStack = mission.delivery(currentItem)
             e.inventory.setItem(e.slot, itemStack)
+            (e.whoClicked as Player).updateInventory()
             if (mission.isSuccess) {
                 e.whoClicked.closeInventory()
             }

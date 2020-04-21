@@ -10,7 +10,7 @@ class GameManager {
     val worldName = "Game"
     var gameWorld: World? = null
     val gameTeamList = TeamUtils.initCreateTeam()
-    val gamePlayerList: List<GamePlayer> = ArrayList()
+    val gamePlayerList = mutableListOf<GamePlayer>()
     var isGaming = false
 
     fun start() {

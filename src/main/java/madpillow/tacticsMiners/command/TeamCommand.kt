@@ -1,5 +1,6 @@
 package madpillow.tacticsMiners.command
 
+import madpillow.tacticsMiners.GamePlayer
 import madpillow.tacticsMiners.TacticsMiners
 import madpillow.tacticsMiners.team.TeamUtils
 import org.bukkit.Bukkit
@@ -12,7 +13,7 @@ class TeamCommand : CommandExecutor {
         if (TacticsMiners.gameManager.isGaming) {
             return false
         }
-        var teamSize = TacticsMiners.gameManager.teamList.size
+        var teamSize = TacticsMiners.gameManager.gameTeamList.size
         if (args.isNotEmpty()) {
             for (arg in args) {
                 if (arg.matches("TEAM_SIZE\\([0-9]+\\)".toRegex())) {
@@ -25,9 +26,12 @@ class TeamCommand : CommandExecutor {
                 }
             }
         }
+        Bukkit.getOnlinePlayers().forEach {
+            TacticsMiners.gameManager.gamePlayerList.add(GamePlayer(it))
+        }
 
         TeamUtils.removeAllEntryAtAllTeam()
-        TeamUtils.divideTeam(teamSize)
+        TeamUtils.divideTeam(TacticsMiners.gameManager.gamePlayerList, teamSize)
 
         return true
     }

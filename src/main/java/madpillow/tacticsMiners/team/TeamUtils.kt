@@ -8,8 +8,8 @@ import org.bukkit.scoreboard.Team
 
 class TeamUtils {
     companion object {
-        fun initCreateTeam(): List<GameTeam> {
-            val teamList = ArrayList<GameTeam>()
+        fun initCreateTeam(): MutableList<GameTeam> {
+            val teamList = mutableListOf<GameTeam>()
             TeamColor.values().forEach { teamColor ->
                 val scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
                 val team = scoreboard.registerNewTeam(teamColor.toString())
@@ -23,7 +23,7 @@ class TeamUtils {
             return teamList
         }
 
-        fun divideTeam(gamePlayerList: List<GamePlayer>, teamSize: Int?) {
+        fun divideTeam(gamePlayerList: MutableList<GamePlayer>, teamSize: Int?) {
             var iterator = 0
             gamePlayerList.forEach { gamePlayer ->
                 joinTeam(TacticsMiners.gameManager.gameTeamList[iterator], gamePlayer)

@@ -1,6 +1,6 @@
 package madpillow.tacticsMiners.config
 
-enum class DefaultConfig {
+enum class DefaultConfigData {
     WorldBorderSize;
 
     fun getDefaultData(): Any {
