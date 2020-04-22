@@ -1,11 +1,10 @@
-package madpillow.tacticsMiners
+package madpillow.tacticsMiners.inventory
 
+import madpillow.tacticsMiners.GamePlayer
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
-import java.util.ArrayList
 
 class ShopInventory(title: String, recipeList: Map<ItemStack, MutableList<ItemStack>>) {
     private val merchant = Bukkit.createMerchant(title)

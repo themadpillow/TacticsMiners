@@ -6,9 +6,11 @@ import madpillow.tacticsMiners.command.StartCommand
 import madpillow.tacticsMiners.command.TeamCommand
 import madpillow.tacticsMiners.config.DefaultConfigUtils
 import madpillow.tacticsMiners.debug.DebugListener
+import madpillow.tacticsMiners.inventory.EnchantInventory
+import madpillow.tacticsMiners.inventory.EnchantInventoryListener
+import madpillow.tacticsMiners.inventory.EnchantLevel
 import madpillow.tacticsMiners.team.TeamUtils
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.plugin.java.JavaPlugin
 
 
@@ -35,21 +37,13 @@ class TacticsMiners : JavaPlugin() {
     private fun debug() {
         Bukkit.getPluginManager().registerEvents(DebugListener(), this)
 
+        Bukkit.getPluginManager().registerEvents(EnchantInventoryListener(), this)
+
         Bukkit.getOnlinePlayers().forEach {
             val gamePlayer = GamePlayer(it)
+            val inv = EnchantInventory(EnchantLevel.ONE).enchantInventory
+            it.openInventory(inv)
         }
-
-        val list = ArrayList<Material>()
-        list.add(Material.DIAMOND)
-        list.add(Material.EMERALD)
-        config.set("debug", Material.DIAMOND)
-        config.set("debug1", list)
-        println(config.get("debug"))
-        println(config.get("debug") as Material)
-        println(config.get("debug1"))
-        println(config.get("debug1") as ArrayList<*>)
-
-        saveConfig()
     }
 
     override fun onDisable() {
