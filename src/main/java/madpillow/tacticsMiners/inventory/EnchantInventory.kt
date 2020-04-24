@@ -3,11 +3,14 @@ package madpillow.tacticsMiners.inventory
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 class EnchantInventory(private val enchantLevel: EnchantLevel) {
     companion object {
+        val inventoryNamePrefix = "${ChatColor.GREEN}${ChatColor.BOLD}エンチャント}"
         val nullResultItem = ItemStack(Material.BARRIER)
 
         init {
@@ -15,9 +18,27 @@ class EnchantInventory(private val enchantLevel: EnchantLevel) {
             resultMeta.setDisplayName("左枠にアイテム設置")
             nullResultItem.itemMeta = resultMeta
         }
+
+        fun resultShowItem(itemStack: ItemStack?): ItemStack {
+            if (itemStack != null &&
+                    CanEnchantItem.list.contains(itemStack.type)) {
+                val resultItem = ItemStack(itemStack.type)
+                val resultMeta = resultItem.itemMeta!!
+                resultMeta.setDisplayName("エンチャント結果")
+                resultMeta.lore = mutableListOf("§kENCHANT")
+                resultMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                resultItem.itemMeta = resultMeta
+                resultItem.addUnsafeEnchantment(Enchantment.LUCK, 1)
+
+                return resultItem
+            } else {
+                return nullResultItem
+            }
+
+        }
     }
 
-    val enchantInventory = Bukkit.createInventory(null, InventoryType.FURNACE, "${ChatColor.GREEN}§lエンチャント(Level:${enchantLevel.name})")
+    val enchantInventory = Bukkit.createInventory(null, InventoryType.FURNACE, inventoryNamePrefix + "(Level:${enchantLevel.name})")
 
     init {
         val bottomItem = ItemStack(Material.PAPER)

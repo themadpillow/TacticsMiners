@@ -25,8 +25,8 @@ class MissionConfig {
 
             configuration.getKeys(false).forEach {
                 val section = configuration.getConfigurationSection(it)!!
-//                val mission = Mission(it, section.getStringList("Lore"), section.get("Material") as Material, section.getInt("NeedAmount"))
-//                missionList.add(mission)
+                val mission = Mission(it, section.getStringList("Lore"), Material.valueOf(section.getString("Material")!!.toUpperCase()), section.getInt("NeedAmount"))
+                missionList.add(mission)
             }
         }
 
@@ -35,7 +35,7 @@ class MissionConfig {
             val mission = Mission("サンプルMISSION", mutableListOf<String>("説明1", "説明2"), Material.DIAMOND, 64)
             val missionSection = configuration.createSection(mission.title)
             missionSection.set("Lore", mission.lore)
-//            missionSection.set("Material", mission.material)
+            missionSection.set("Material", mission.material.toString())
             missionSection.set("NeedAmount", mission.needAmount)
 
             config.saveConfig()

@@ -1,9 +1,11 @@
 package madpillow.tacticsMiners
 
 import madpillow.tacticsMiners.mission.MissionInventoryListener
+import madpillow.tacticsMiners.team.GameTeam
 import madpillow.tacticsMiners.team.TeamUtils
 import org.bukkit.Bukkit
 import org.bukkit.World
+import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
 class GameManager {
@@ -32,5 +34,14 @@ class GameManager {
                 gameWorld = WorldUtils.reCreateWorld(worldName)
             }
         }.runTaskLater(TacticsMiners.plugin, 0L)
+    }
+
+    fun getGamePlayerAtPlayer(player: Player): GamePlayer? {
+        return gamePlayerList.firstOrNull { it.player == player }
+    }
+
+    fun getGameTeamAtList(player: Player): GameTeam? {
+        val gamePlayer = getGamePlayerAtPlayer(player)
+        return gamePlayer?.gameTeam
     }
 }

@@ -5,8 +5,12 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 class Mission(val title: String, val lore: MutableList<String>, val material: Material, val needAmount: Int) {
-    private val inventory = Bukkit.createInventory(null, getInventorySize(), "MISSION[$title]")
-    private var nowAmount = 0
+    companion object {
+        const val inventoryNamePrefix = "MISSION:"
+    }
+
+    val inventory = Bukkit.createInventory(null, getInventorySize(), inventoryNamePrefix + title)
+    var nowAmount = 0
     var isSuccess = false
 
     init {
