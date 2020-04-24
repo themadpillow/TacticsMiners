@@ -10,7 +10,7 @@ class StartCommand : CommandExecutor {
         if (TacticsMiners.gameManager.isGaming) {
             sender.sendMessage("既にゲーム中です")
             return false
-        } else if (TacticsMiners.gameManager.gameTeamList[0].team.entries.isEmpty()) {
+        } else if (TacticsMiners.gameManager.gameTeamList[0].players.isEmpty()) {
             sender.sendMessage("先にチームを設定してください")
             sender.sendMessage("/team <Options...>")
             return false

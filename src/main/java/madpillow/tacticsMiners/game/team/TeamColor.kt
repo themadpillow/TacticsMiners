@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.team
+package madpillow.tacticsMiners.game.team
 
 import org.bukkit.ChatColor
 

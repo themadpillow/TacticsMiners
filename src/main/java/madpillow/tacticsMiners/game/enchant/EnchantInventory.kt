@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.inventory
+package madpillow.tacticsMiners.game.enchant
 
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-class EnchantInventory(private val enchantLevel: EnchantLevel) {
+class EnchantInventory(enchantLevel: EnchantLevel) {
     companion object {
         val inventoryNamePrefix = "${ChatColor.GREEN}${ChatColor.BOLD}エンチャント}"
         val nullResultItem = ItemStack(Material.BARRIER)

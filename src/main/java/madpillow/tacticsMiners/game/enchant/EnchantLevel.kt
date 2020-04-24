@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.inventory
+package madpillow.tacticsMiners.game.enchant
 
 import org.bukkit.enchantments.Enchantment
 

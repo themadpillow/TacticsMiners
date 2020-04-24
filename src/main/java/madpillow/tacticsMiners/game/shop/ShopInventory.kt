@@ -1,6 +1,6 @@
-package madpillow.tacticsMiners.inventory
+package madpillow.tacticsMiners.game.shop
 
-import madpillow.tacticsMiners.GamePlayer
+import madpillow.tacticsMiners.game.GamePlayer
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack

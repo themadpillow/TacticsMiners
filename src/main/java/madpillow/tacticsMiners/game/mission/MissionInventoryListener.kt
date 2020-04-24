@@ -1,7 +1,7 @@
-package madpillow.tacticsMiners.mission
+package madpillow.tacticsMiners.game.mission
 
-import madpillow.tacticsMiners.GamePlayer
-import madpillow.tacticsMiners.team.TeamUtils
+import madpillow.tacticsMiners.TacticsMiners
+import madpillow.tacticsMiners.game.GamePlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -15,7 +15,7 @@ class MissionInventoryListener : Listener {
         }
 
         val currentItem = e.currentItem ?: return
-        val gamePlayer: GamePlayer = TeamUtils.getGamePlayerAtList(e.whoClicked as Player) ?: return
+        val gamePlayer: GamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player) ?: return
         val mission = gamePlayer.gameTeam?.getMission(e.view.title) ?: return
 
         e.isCancelled = true

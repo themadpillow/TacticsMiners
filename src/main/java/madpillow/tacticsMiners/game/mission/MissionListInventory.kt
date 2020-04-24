@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.mission
+package madpillow.tacticsMiners.game.mission
 
 import org.bukkit.Bukkit
 import org.bukkit.Material

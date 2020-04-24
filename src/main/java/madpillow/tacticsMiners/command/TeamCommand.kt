@@ -1,8 +1,7 @@
 package madpillow.tacticsMiners.command
 
-import madpillow.tacticsMiners.GamePlayer
 import madpillow.tacticsMiners.TacticsMiners
-import madpillow.tacticsMiners.team.TeamUtils
+import madpillow.tacticsMiners.game.GamePlayer
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -30,8 +29,7 @@ class TeamCommand : CommandExecutor {
             TacticsMiners.gameManager.gamePlayerList.add(GamePlayer(it))
         }
 
-        TeamUtils.removeAllEntryAtAllTeam()
-        TeamUtils.divideTeam(TacticsMiners.gameManager.gamePlayerList, teamSize)
+        TacticsMiners.gameManager.divideTeam(TacticsMiners.gameManager.gamePlayerList, teamSize)
 
         return true
     }

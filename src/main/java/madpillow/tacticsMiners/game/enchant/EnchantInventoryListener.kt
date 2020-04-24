@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.inventory
+package madpillow.tacticsMiners.game.enchant
 
 import madpillow.tacticsMiners.TacticsMiners
 import org.bukkit.Material

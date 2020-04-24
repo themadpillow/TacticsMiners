@@ -1,7 +1,7 @@
 package madpillow.tacticsMiners.config
 
 import madpillow.tacticsMiners.TacticsMiners
-import madpillow.tacticsMiners.mission.Mission
+import madpillow.tacticsMiners.game.mission.Mission
 import org.bukkit.Material
 
 class MissionConfig {

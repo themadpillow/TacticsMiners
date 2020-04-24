@@ -1,9 +1,9 @@
-package madpillow.tacticsMiners.team
+package madpillow.tacticsMiners.game.team
 
-import madpillow.tacticsMiners.GamePlayer
 import madpillow.tacticsMiners.config.MissionConfig
-import madpillow.tacticsMiners.mission.Mission
-import madpillow.tacticsMiners.mission.MissionListInventory
+import madpillow.tacticsMiners.game.GamePlayer
+import madpillow.tacticsMiners.game.mission.Mission
+import madpillow.tacticsMiners.game.mission.MissionListInventory
 import org.bukkit.entity.Player
 
 class GameTeam {

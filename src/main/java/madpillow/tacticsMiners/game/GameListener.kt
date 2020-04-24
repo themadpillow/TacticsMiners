@@ -1,10 +1,8 @@
-package madpillow.tacticsMiners
+package madpillow.tacticsMiners.game
 
-import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.inventory.InventoryType
 
 class GameListener : Listener {
     @EventHandler

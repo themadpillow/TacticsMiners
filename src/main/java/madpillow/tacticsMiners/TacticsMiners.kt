@@ -6,10 +6,11 @@ import madpillow.tacticsMiners.command.StartCommand
 import madpillow.tacticsMiners.command.TeamCommand
 import madpillow.tacticsMiners.config.DefaultConfigUtils
 import madpillow.tacticsMiners.debug.DebugListener
-import madpillow.tacticsMiners.inventory.EnchantInventory
-import madpillow.tacticsMiners.inventory.EnchantInventoryListener
-import madpillow.tacticsMiners.inventory.EnchantLevel
-import madpillow.tacticsMiners.team.TeamUtils
+import madpillow.tacticsMiners.game.GameManager
+import madpillow.tacticsMiners.game.GamePlayer
+import madpillow.tacticsMiners.game.enchant.EnchantInventory
+import madpillow.tacticsMiners.game.enchant.EnchantInventoryListener
+import madpillow.tacticsMiners.game.enchant.EnchantLevel
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -24,7 +25,6 @@ class TacticsMiners : JavaPlugin() {
         plugin = this
         DefaultConfigUtils.init()
         gameManager = GameManager()
-        TeamUtils.initCreateTeam()
 
         getCommand("check")?.setExecutor(CheckCommand())
         getCommand("recreate")?.setExecutor(RecreateCommand())
@@ -47,6 +47,5 @@ class TacticsMiners : JavaPlugin() {
     }
 
     override fun onDisable() {
-        TeamUtils.removeAllEntryAtAllTeam()
     }
 }

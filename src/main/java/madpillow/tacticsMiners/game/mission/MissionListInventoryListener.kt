@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.mission
+package madpillow.tacticsMiners.game.mission
 
 import madpillow.tacticsMiners.TacticsMiners
 import org.bukkit.entity.Player
