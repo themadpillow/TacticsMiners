@@ -6,7 +6,7 @@ import madpillow.tacticsMiners.game.mission.Mission
 import madpillow.tacticsMiners.game.mission.MissionListInventory
 import org.bukkit.entity.Player
 
-class GameTeam {
+class GameTeam(val teamColor: TeamColor) {
     val players = mutableListOf<GamePlayer>()
     val missionList = MissionConfig.getMissionList()
     val missionListInventory: MissionListInventory

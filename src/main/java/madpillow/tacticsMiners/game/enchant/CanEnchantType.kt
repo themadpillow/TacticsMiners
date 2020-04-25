@@ -2,7 +2,7 @@ package madpillow.tacticsMiners.game.enchant
 
 import org.bukkit.Material
 
-class CanEnchantItem {
+class CanEnchantType {
     companion object {
         val list = mutableListOf<Material>(
                 Material.WOODEN_PICKAXE,

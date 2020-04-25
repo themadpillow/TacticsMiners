@@ -1,36 +1,48 @@
 package madpillow.tacticsMiners.config
 
 import madpillow.tacticsMiners.TacticsMiners
+import madpillow.tacticsMiners.game.skill.SkillType
+import org.bukkit.configuration.ConfigurationSection
 
 class SkillConfig {
     companion object {
         private val config = CustomConfig(TacticsMiners.plugin, "SkillList.yml")
-        val digSkillTimeMap = mutableMapOf<Int, Int>()
+        val skillEffectTimeMap = mutableMapOf<SkillType, MutableMap<Int, Int>>()
 
-        fun reloadConfig() {
-            val configuration = config.getConfig()
-            if (configuration.getKeys(false).isEmpty()) {
-                createSample()
-            }
-
-            configuration.getKeys(false).forEach { configKey ->
-                val section = configuration.getConfigurationSection(configKey)!!
-                section.getKeys(false).forEach { sectionKey ->
-                    if (sectionKey == "DIG_SPEED") {
-                        digSkillTimeMap[Integer.valueOf(sectionKey)] = section.getInt(sectionKey)
-                    }
-                }
-            }
+        fun loadConfig() {
+            mutableListOf(SkillType.FAST_DIGGING, SkillType.SPEED, SkillType.ENCOURAGE)
+                    .forEach { loadEffectTime(it) }
         }
 
-        private fun createSample() {
-            val configuration = config.getConfig()
-            val section = configuration.createSection("DIG_SPEED")
-            section.set("1", 10)
-            section.set("2", 20)
-            section.set("3", 30)
+        private fun loadEffectTime(skillType: SkillType) {
+            val section = config.getConfig().getConfigurationSection(skillType.toString())
+                    ?: createSample(skillType)
+            val list = mutableMapOf<Int, Int>()
+            for (level in 1..skillType.maxLevel) {
+                if (section.isSet(level.toString())) {
+                    list[level] = section.getInt(level.toString())
+                } else {
+                    section.set(level.toString(), level * 10)
+                    config.saveConfig()
+                    list[level] = level * 10
+                }
+            }
 
+            skillEffectTimeMap[skillType] = list
+        }
+
+        private fun createSample(skillType: SkillType): ConfigurationSection {
+            val section = config.getConfig().createSection(skillType.toString())
+            val list = mutableMapOf<Int, Int>()
+            for (level in 1..skillType.maxLevel) {
+                section.set(level.toString(), level * 10)
+                list[level] = level * 10
+            }
+
+            skillEffectTimeMap[skillType] = list
             config.saveConfig()
+
+            return section
         }
     }
 }

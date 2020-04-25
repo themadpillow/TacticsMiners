@@ -1,20 +1,24 @@
 package madpillow.tacticsMiners.game.skill
 
+import madpillow.tacticsMiners.game.GamePlayer
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-abstract class Skill(name: String, enchantment: Enchantment, level: Int) {
+class Skill(private val skillType: SkillType, private val level: Int) {
     val itemStack = ItemStack(Material.PAPER)
+
     init {
-        val meta = itemStack.itemMeta!!
-        meta.setDisplayName(name)
-        meta.lore = getLore()
-        meta.addEnchant(enchantment, level, true)
-        itemStack.itemMeta = meta
+        val itemMeta = itemStack.itemMeta!!
+        itemMeta.setDisplayName(skillType.getName(level))
+        itemMeta.lore = skillType.getLore(level)
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        itemStack.itemMeta = itemMeta
+        itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1)
     }
 
-    abstract fun getLore(): MutableList<String>
-    abstract fun perform(player : Player)
+    fun perform(gamePlayer: GamePlayer) {
+        skillType.perform(gamePlayer, level)
+    }
 }

@@ -21,7 +21,7 @@ class EnchantInventory(enchantLevel: EnchantLevel) {
 
         fun resultShowItem(itemStack: ItemStack?): ItemStack {
             if (itemStack != null &&
-                    CanEnchantItem.list.contains(itemStack.type)) {
+                    CanEnchantType.list.contains(itemStack.type)) {
                 val resultItem = ItemStack(itemStack.type)
                 val resultMeta = resultItem.itemMeta!!
                 resultMeta.setDisplayName("エンチャント結果")
