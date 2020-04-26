@@ -10,17 +10,7 @@ class MissionConfig {
         private val config = CustomConfig(TacticsMiners.plugin, "MissionList.yml")
         private val missionList = mutableListOf<Mission>()
 
-        fun getMissionList(gameTeam: GameTeam): MutableList<Mission> {
-            if (missionList.isEmpty()) {
-                reloadConfig()
-            }
-
-            val copyMissionList = missionList.toMutableList()
-            copyMissionList.forEach { it.holderTeam = gameTeam }
-            return copyMissionList
-        }
-
-        fun reloadConfig() {
+        fun init() {
             val configuration = config.getConfig()
             if (configuration.getKeys(false).isEmpty()) {
                 createSampleMission()
@@ -31,6 +21,12 @@ class MissionConfig {
                 val mission = Mission(null, it, section.getStringList("Lore"), Material.valueOf(section.getString("Material")!!.toUpperCase()), section.getInt("NeedAmount"))
                 missionList.add(mission)
             }
+        }
+
+        fun getMissionList(gameTeam: GameTeam): MutableList<Mission> {
+            val copyMissionList = missionList.toMutableList()
+            copyMissionList.forEach { it.holderTeam = gameTeam }
+            return copyMissionList
         }
 
         private fun createSampleMission() {

@@ -9,7 +9,7 @@ class SkillConfig {
         private val config = CustomConfig(TacticsMiners.plugin, "SkillList.yml")
         val skillEffectTimeMap = mutableMapOf<SkillType, MutableMap<Int, Int>>()
 
-        fun loadConfig() {
+        fun init() {
             mutableListOf(SkillType.FAST_DIGGING, SkillType.SPEED, SkillType.ENCOURAGE)
                     .forEach { loadEffectTime(it) }
         }

@@ -5,6 +5,9 @@ import madpillow.tacticsMiners.command.RecreateCommand
 import madpillow.tacticsMiners.command.StartCommand
 import madpillow.tacticsMiners.command.TeamCommand
 import madpillow.tacticsMiners.config.DefaultConfig
+import madpillow.tacticsMiners.config.MissionConfig
+import madpillow.tacticsMiners.config.SkillConfig
+import madpillow.tacticsMiners.config.TextConfig
 import madpillow.tacticsMiners.debug.Debug
 import madpillow.tacticsMiners.game.GameManager
 import org.bukkit.plugin.java.JavaPlugin
@@ -19,6 +22,9 @@ class TacticsMiners : JavaPlugin() {
     override fun onEnable() {
         plugin = this
         DefaultConfig.init()
+        MissionConfig.init()
+        SkillConfig.init()
+        TextConfig.init()
         gameManager = GameManager()
 
         getCommand("check")?.setExecutor(CheckCommand())
