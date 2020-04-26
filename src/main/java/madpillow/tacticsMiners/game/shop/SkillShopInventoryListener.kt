@@ -1,7 +1,6 @@
 package madpillow.tacticsMiners.game.shop
 
 import madpillow.tacticsMiners.TacticsMiners
-import madpillow.tacticsMiners.game.skill.Skill
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,8 +15,6 @@ class SkillShopInventoryListener : Listener {
 
         val itemStack = e.merchant.recipes[e.index].result
         val gamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player) ?: return
-        if (itemStack is Skill) {
-            gamePlayer.skillInventory.addSkill(itemStack)
-        }
+        gamePlayer.player.inventory.addItem(itemStack)
     }
 }

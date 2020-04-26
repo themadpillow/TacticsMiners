@@ -19,11 +19,12 @@ class SkillInventoryListener : Listener {
         }
 
         val currentItem = e.currentItem ?: return
-        if (currentItem !is Skill) {
-            return
-        }
         val gamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player) ?: return
+        val skill = gamePlayer.skillInventory.skillList.firstOrNull {
+            it.equal(currentItem)
+        } ?: return
 
-        currentItem.click(gamePlayer)
+
+        skill.click(gamePlayer)
     }
 }

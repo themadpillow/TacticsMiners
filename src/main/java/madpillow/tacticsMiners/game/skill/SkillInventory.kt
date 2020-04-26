@@ -4,13 +4,13 @@ import madpillow.tacticsMiners.game.GamePlayer
 import org.bukkit.Bukkit
 
 class SkillInventory(private val holder: GamePlayer) {
-    private val skillList = mutableListOf<Skill>()
+    val skillList = mutableListOf<Skill>()
 
     companion object {
         const val inventoryName = "スキル一覧"
     }
 
-    val inventory = Bukkit.createInventory(holder.player, 27, inventoryName)
+    private val inventory = Bukkit.createInventory(holder.player, 27, inventoryName)
 
     fun addSkill(skill: Skill) {
         this.skillList.add(skill)
@@ -22,10 +22,7 @@ class SkillInventory(private val holder: GamePlayer) {
 
     fun openInventory() {
         val openInv = inventory
-        for (i in 0 until skillList.size) {
-            openInv.setItem(i, skillList[i])
-        }
-
+        skillList.forEach { openInv.addItem(it.itemStack) }
         holder.player.openInventory(openInv)
     }
 }

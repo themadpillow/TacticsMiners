@@ -53,7 +53,7 @@ enum class ShopInventoryType {
                 val recipe = mutableMapOf<ItemStack, MutableList<ItemStack>>()
                 SkillType.values().forEach {
                     for (level in 1 until it.maxLevel) {
-                        recipe[Skill(it, level)] = mutableListOf(ItemStack(Material.COAL, level))
+                        recipe[Skill(it, level).itemStack] = mutableListOf(ItemStack(Material.COAL, level))
                     }
                 }
 
