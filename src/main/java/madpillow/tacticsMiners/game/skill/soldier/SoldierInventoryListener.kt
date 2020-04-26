@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.game.skill
+package madpillow.tacticsMiners.game.skill.soldier
 
 import madpillow.tacticsMiners.TacticsMiners
 import org.bukkit.entity.Player
@@ -6,10 +6,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class SkillInventoryListener : Listener {
+class SoldierInventoryListener : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
-        if (e.view.title != SkillInventory.inventoryName) {
+        if (e.view.title != SoldierInventoryType.SELECT.getInventoryTitle()
+                && e.view.title != SoldierInventoryType.PLAYER.getInventoryTitle()) {
             return
         }
 
@@ -19,11 +20,10 @@ class SkillInventoryListener : Listener {
         }
 
         val currentItem = e.currentItem ?: return
-        if (currentItem !is Skill) {
-            return
-        }
         val gamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player) ?: return
-
-        currentItem.click(gamePlayer)
+        if (currentItem.type == gamePlayer.gameTeam!!.teamColor.getColoredWool().type) {
+            //TODO
+        }
+        //TODO
     }
 }

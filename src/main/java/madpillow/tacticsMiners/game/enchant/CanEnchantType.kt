@@ -4,7 +4,7 @@ import org.bukkit.Material
 
 class CanEnchantType {
     companion object {
-        val list = mutableListOf<Material>(
+       val list = mutableListOf<Material>(
                 Material.WOODEN_PICKAXE,
                 Material.STONE_PICKAXE,
                 Material.IRON_PICKAXE,

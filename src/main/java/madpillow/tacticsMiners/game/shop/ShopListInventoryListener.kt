@@ -16,7 +16,7 @@ class ShopListInventoryListener : Listener {
         if (e.clickedInventory != e.view.topInventory) {
             return
         }
-        val currentShopItem = ShopInventoryItem.values().firstOrNull { it.getPos() == e.slot } ?: return
+        val currentShopItem = ShopInventoryType.values().firstOrNull { it.getPos() == e.slot } ?: return
         ShopInventory(currentShopItem).openInventory(e.whoClicked as Player)
     }
 }

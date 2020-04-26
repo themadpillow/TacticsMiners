@@ -4,7 +4,7 @@ import madpillow.tacticsMiners.command.CheckCommand
 import madpillow.tacticsMiners.command.RecreateCommand
 import madpillow.tacticsMiners.command.StartCommand
 import madpillow.tacticsMiners.command.TeamCommand
-import madpillow.tacticsMiners.config.DefaultConfigUtils
+import madpillow.tacticsMiners.config.DefaultConfig
 import madpillow.tacticsMiners.debug.DebugListener
 import madpillow.tacticsMiners.game.GameManager
 import madpillow.tacticsMiners.game.GamePlayer
@@ -23,7 +23,7 @@ class TacticsMiners : JavaPlugin() {
 
     override fun onEnable() {
         plugin = this
-        DefaultConfigUtils.init()
+        DefaultConfig.init()
         gameManager = GameManager()
 
         getCommand("check")?.setExecutor(CheckCommand())

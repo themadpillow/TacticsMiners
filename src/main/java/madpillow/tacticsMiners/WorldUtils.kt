@@ -1,6 +1,7 @@
 package madpillow.tacticsMiners
 
-import madpillow.tacticsMiners.config.DefaultConfigUtils
+import madpillow.tacticsMiners.config.DefaultConfig
+import madpillow.tacticsMiners.config.DefaultConfigType
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.WorldCreator
@@ -13,7 +14,7 @@ class WorldUtils {
             deleteWorld(world)
 
             world = WorldCreator(worldName).createWorld()
-            world?.worldBorder?.size = DefaultConfigUtils.getWorldBorderSize()
+            world?.worldBorder?.size = DefaultConfig.getData(DefaultConfigType.WorldBorderSize) as Double
             world?.pvp = false
             return world!!
         }

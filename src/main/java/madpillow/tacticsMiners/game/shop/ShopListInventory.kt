@@ -8,7 +8,7 @@ class ShopListInventory {
         val inventory = Bukkit.createInventory(null, 9, inventoryName)
 
         init {
-            ShopInventoryItem.values().forEach {
+            ShopInventoryType.values().forEach {
                 inventory.setItem(it.getPos(), it.getItemStack())
             }
         }

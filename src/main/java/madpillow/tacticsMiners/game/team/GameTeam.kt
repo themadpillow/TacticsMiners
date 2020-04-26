@@ -8,8 +8,9 @@ import org.bukkit.entity.Player
 
 class GameTeam(val teamColor: TeamColor) {
     val players = mutableListOf<GamePlayer>()
-    val missionList = MissionConfig.getMissionList()
+    val missionList = MissionConfig.getMissionList(this)
     val missionListInventory: MissionListInventory
+    var hasSoldier = false
 
     init {
         // TODO createMissionMap

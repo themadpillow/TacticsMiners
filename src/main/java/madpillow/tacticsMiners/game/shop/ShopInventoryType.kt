@@ -1,11 +1,12 @@
 package madpillow.tacticsMiners.game.shop
 
+import madpillow.tacticsMiners.game.skill.Skill
 import madpillow.tacticsMiners.game.skill.SkillType
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-enum class ShopInventoryItem {
+enum class ShopInventoryType {
     FOOD, TOOL, ENCHANTMENT, SKILL;
 
     fun getItemStack(): ItemStack {
@@ -52,7 +53,7 @@ enum class ShopInventoryItem {
                 val recipe = mutableMapOf<ItemStack, MutableList<ItemStack>>()
                 SkillType.values().forEach {
                     for (level in 1 until it.maxLevel) {
-                        recipe[SkillItemStack(it, level)] = mutableListOf(ItemStack(Material.COAL, level))
+                        recipe[Skill(it, level)] = mutableListOf(ItemStack(Material.COAL, level))
                     }
                 }
 
