@@ -24,7 +24,7 @@ class StealInventoryListener : Listener {
         val gamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player) ?: return
         val skill = gamePlayer.skillInventory.skillList.firstOrNull { it.equal(currentItem) } ?: return
         val gameTeam = TacticsMiners.gameManager.gameTeamList
-                .firstOrNull { it.teamColor.getColoredWool().type == currentItem.type } ?: return
+                .firstOrNull { it.getColoredWool().type == currentItem.type } ?: return
         val targetMission = gameTeam.missionList[Random.nextInt(gameTeam.missionList.size)]
 
         skill.perform(gamePlayer, targetMission)

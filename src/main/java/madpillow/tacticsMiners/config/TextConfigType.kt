@@ -1,12 +1,16 @@
 package madpillow.tacticsMiners.config
 
 enum class TextConfigType {
-    STEAL_MESSAGE_TARGET, STEAL_MESSAGE_SOURCE;
+    SUCCESS_STEAL_TARGET, SUCCESS_STEAL_SOURCE, FAILED_STEAL_SOURCE, FAILED_STEAL_TARGET,
+    SUCCESS_SOLDIER;
 
     fun getDefaultData(): String {
         return when (this) {
-            STEAL_MESSAGE_TARGET -> "[SOURCE]により[ORE]が[AMOUNT]盗まれました([MISSION])"
-            STEAL_MESSAGE_SOURCE -> "[TARGET]の[ORE]を[AMOUNT]盗みました"
+            SUCCESS_STEAL_TARGET -> "[SOURCE]により[ORE]を[AMOUNT]個盗まれました([MISSION])"
+            SUCCESS_STEAL_SOURCE -> "[TARGET]の[ORE]を[AMOUNT]個盗みました"
+            FAILED_STEAL_TARGET -> "[SOURCE]による強奪カードから防衛しました"
+            FAILED_STEAL_SOURCE -> "[TARGET]への強奪は防衛されました"
+            SUCCESS_SOLDIER -> "[TARGET]からの防衛に成功し、報酬([ORE]:[AMOUNT]個)を受け取りました"
         }
     }
 
@@ -17,12 +21,20 @@ enum class TextConfigType {
                        amount: String = "amount",
                        mission: String = "mission"): String {
         return when (this) {
-            STEAL_MESSAGE_TARGET -> sourceText
+            SUCCESS_STEAL_TARGET -> sourceText
                     .replace("[SOURCE]", source)
                     .replace("[ORE]", ore)
                     .replace("[AMOUNT]", amount)
                     .replace("[MISSION]", mission)
-            STEAL_MESSAGE_SOURCE -> sourceText
+            SUCCESS_STEAL_SOURCE -> sourceText
+                    .replace("[TARGET]", target)
+                    .replace("[ORE]", ore)
+                    .replace("[AMOUNT]", amount)
+            FAILED_STEAL_TARGET -> sourceText
+                    .replace("[SOURCE]", source)
+            FAILED_STEAL_SOURCE -> sourceText
+                    .replace("[TARGET]", target)
+            SUCCESS_SOLDIER -> sourceText
                     .replace("[TARGET]", target)
                     .replace("[ORE]", ore)
                     .replace("[AMOUNT]", amount)

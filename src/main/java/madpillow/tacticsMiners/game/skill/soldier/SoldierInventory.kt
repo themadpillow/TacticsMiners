@@ -12,30 +12,11 @@ class SoldierInventory(private val holder: GamePlayer) {
     private val playerInventory = Bukkit.createInventory(holder.player, InventoryUtils.getInventorySize(holder.gameTeam!!.players.size, 1), SoldierInventoryType.PLAYER.getInventoryTitle())
 
     init {
-        val playerDefenceItem = ItemStack(Material.PLAYER_HEAD)
-        val playerDefenceMeta = playerDefenceItem.itemMeta as SkullMeta
-        playerDefenceMeta.owningPlayer = holder.player
-        playerDefenceItem.itemMeta = playerDefenceMeta
-
-        selectInventory.setItem(6, playerDefenceItem)
-
-        holder.gameTeam!!.players.filter { it != holder }.filter { !it.hasSoldier }.forEach {
-            val skullItem = ItemStack(Material.PLAYER_HEAD)
-            val skullMeta = skullItem.itemMeta as SkullMeta
-            playerDefenceMeta.owningPlayer = it.player
-            skullMeta.setDisplayName("${it.player.name}を防衛する")
-            skullItem.itemMeta = skullMeta
-
-            playerInventory.addItem()
-        }
-    }
-
-    private fun openSelectInventory() {
         val gameTeam = holder.gameTeam!!
-        val teamDefenceItem = if (gameTeam.hasSoldier) {
-            val teamItem = gameTeam.teamColor.getColoredWool()
+        val teamDefenceItem = if (gameTeam.soldier == null) {
+            val teamItem = gameTeam.getColoredWool()
             val teamItemMeta = teamItem.itemMeta!!
-            teamItemMeta.lore = mutableListOf("強奪カードからチームを守る")
+            teamItemMeta.setDisplayName("強奪カードからチームを守る")
             teamItem.itemMeta = teamItemMeta
 
             teamItem
@@ -47,19 +28,35 @@ class SoldierInventory(private val holder: GamePlayer) {
 
             alreadyDefenceItem
         }
-        selectInventory.setItem(2, teamDefenceItem)
 
+        val playerDefenceItem = ItemStack(Material.PLAYER_HEAD)
+        val playerDefenceMeta = playerDefenceItem.itemMeta as SkullMeta
+        playerDefenceMeta.owningPlayer = holder.player
+        playerDefenceMeta.setDisplayName("暗殺カードからプレイヤーを守る")
+        playerDefenceItem.itemMeta = playerDefenceMeta
+
+
+        selectInventory.setItem(2, teamDefenceItem)
+        selectInventory.setItem(6, playerDefenceItem)
+
+        holder.soldierInventory = this
+    }
+
+    fun openSelectInventory() {
         holder.player.openInventory(selectInventory)
     }
 
-    private fun openPlayerInventory() {
-        holder.player.openInventory(playerInventory)
-    }
+    fun openPlayerInventory() {
+        holder.gameTeam!!.players.filter { it != holder }.filter { it.soldier != null }.forEach {
+            val skullItem = ItemStack(Material.PLAYER_HEAD)
+            val skullMeta = skullItem.itemMeta as SkullMeta
+            skullMeta.owningPlayer = it.player
+            skullMeta.setDisplayName("${it.player.name}を防衛する")
+            skullItem.itemMeta = skullMeta
 
-    fun openInventory(soldierInventoryType: SoldierInventoryType) {
-        when (soldierInventoryType) {
-            SoldierInventoryType.SELECT -> openSelectInventory()
-            SoldierInventoryType.PLAYER -> openPlayerInventory()
+            playerInventory.addItem()
         }
+
+        holder.player.openInventory(playerInventory)
     }
 }

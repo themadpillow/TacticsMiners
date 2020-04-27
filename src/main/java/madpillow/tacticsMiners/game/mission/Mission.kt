@@ -8,6 +8,8 @@ import madpillow.tacticsMiners.game.team.GameTeam
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
@@ -50,6 +52,23 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
 
     fun steal(source: GamePlayer) {
         val stealAmount = Random.nextInt(nowAmount) + 1
+        if (this.holderTeam!!.soldier != null) {
+            val sourceString = "${source.gameTeam?.teamColor?.getChatColor()}[${source.gameTeam?.teamColor}]${source.player.name}${ChatColor.RESET}"
+            holderTeam!!.players.forEach { it.player.sendMessage(TextConfig.getMessage(TextConfigType.FAILED_STEAL_TARGET, source = sourceString)) }
+
+            val targetString = "${holderTeam!!.teamColor.getChatColor()}[${holderTeam!!.teamColor}]${ChatColor.RESET}"
+            source.player.sendMessage(TextConfig.getMessage(TextConfigType.FAILED_STEAL_SOURCE, target = targetString))
+
+            val defenceAmount = stealAmount / 2
+            holderTeam!!.soldier!!.player.inventory.addItem(ItemStack(material, defenceAmount))
+            holderTeam!!.soldier!!.player.sendMessage(TextConfig.getMessage(TextConfigType.SUCCESS_SOLDIER, source = sourceString, ore = material.toString(), amount = defenceAmount.toString()))
+
+            holderTeam!!.soldier = null
+            return
+        }
+
+
+
         nowAmount -= stealAmount
         val stealList = reduceInventoryItemStack(stealAmount)
 
@@ -58,7 +77,7 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
         holderTeam!!.players.forEach {
             it.player.sendMessage(
                     TextConfig.getMessage(
-                            TextConfigType.STEAL_MESSAGE_TARGET,
+                            TextConfigType.SUCCESS_STEAL_TARGET,
                             source = sourceString,
                             ore = material.toString(),
                             amount = stealAmount.toString(),
@@ -69,7 +88,7 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
         val targetString = "${holderTeam!!.teamColor.getChatColor()}[${holderTeam!!.teamColor}]${ChatColor.RESET}"
         source.player.sendMessage(
                 TextConfig.getMessage(
-                        TextConfigType.STEAL_MESSAGE_SOURCE,
+                        TextConfigType.SUCCESS_STEAL_SOURCE,
                         target = targetString,
                         ore = material.toString(),
                         amount = stealAmount.toString()
@@ -101,5 +120,19 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
         nowAmount -= reduceAmount
 
         return reduceList
+    }
+
+    fun getItemStack(): ItemStack {
+        val itemStack = ItemStack(Material.PAPER)
+        val itemMeta = itemStack.itemMeta!!
+        itemMeta.setDisplayName(this.title + "($nowAmount/$needAmount)")
+        itemMeta.lore = this.lore
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        itemStack.itemMeta = itemMeta
+        if (this.isSuccess) {
+            itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1)
+        }
+
+        return itemStack
     }
 }

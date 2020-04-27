@@ -3,14 +3,15 @@ package madpillow.tacticsMiners.game.skill
 import madpillow.tacticsMiners.config.SkillConfig
 import madpillow.tacticsMiners.game.GamePlayer
 import madpillow.tacticsMiners.game.mission.Mission
-import madpillow.tacticsMiners.game.skill.soldier.SoldierInventoryType
+import madpillow.tacticsMiners.game.skill.soldier.SoldierInventory
+import madpillow.tacticsMiners.game.skill.spy.SpyInventory
 import madpillow.tacticsMiners.game.skill.steal.StealInventory
 import madpillow.tacticsMiners.game.team.GameTeam
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 enum class SkillType(val maxLevel: Int) {
-    FAST_DIGGING(3), SPEED(3), ENCOURAGE(2), STEAL(1), SOLDIER(1);
+    FAST_DIGGING(3), SPEED(3), ENCOURAGE(2), STEAL(1), SOLDIER(1), SPY(1);
 
     fun getName(level: Int = 1): String {
         return when (this) {
@@ -19,6 +20,7 @@ enum class SkillType(val maxLevel: Int) {
             ENCOURAGE -> "激励カード$level"
             STEAL -> "強奪カード"
             SOLDIER -> "騎士カード"
+            SPY -> "スパイカード"
         }
     }
 
@@ -50,11 +52,10 @@ enum class SkillType(val maxLevel: Int) {
                     "他プレイヤーの防衛に成功した場合、報酬を受け取ることが出来る",
                     "(報酬は盗まれる予定だった量の半分）"
             )
+            SPY -> mutableListOf(
+                    "相手の納品済み鉱石や納品済みのミッションを確認することが出来る"
+            )
         }
-    }
-
-    fun getSkill(level: Int = 1): Skill {
-        return Skill(this, level)
     }
 
     fun click(gamePlayer: GamePlayer, skill: Skill) {
@@ -65,7 +66,8 @@ enum class SkillType(val maxLevel: Int) {
                 perform(gamePlayer, skill)
             }
             STEAL -> gamePlayer.player.openInventory(StealInventory(gamePlayer.gameTeam!!, skill).inventory)
-            SOLDIER -> gamePlayer.openSoldierInventory(SoldierInventoryType.SELECT)
+            SOLDIER -> SoldierInventory(gamePlayer).openSelectInventory()
+            SPY -> SpyInventory(gamePlayer.gameTeam!!, skill)
         }
     }
 
@@ -76,14 +78,17 @@ enum class SkillType(val maxLevel: Int) {
             FAST_DIGGING,
             SPEED -> gamePlayer.player.addPotionEffect(getPotionEffect(skill.level))
             ENCOURAGE -> gamePlayer.gameTeam!!.players.forEach { it.player.addPotionEffect(getPotionEffect(skill.level)) }
-            STEAL -> (target as Mission).steal(gamePlayer)
+            STEAL -> {
+                (target as Mission).steal(gamePlayer)
+            }
             SOLDIER -> {
                 if (target is GameTeam) {
-                    target.hasSoldier = true
+                    target.soldier = gamePlayer
                 } else { // target is GamePlayer
-                    (target as GamePlayer).hasSoldier = true
+                    (target as GamePlayer).soldier = gamePlayer
                 }
             }
+            SPY -> TODO()
         }
     }
 }

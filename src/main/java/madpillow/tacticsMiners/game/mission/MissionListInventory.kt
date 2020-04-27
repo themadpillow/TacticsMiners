@@ -1,29 +1,22 @@
 package madpillow.tacticsMiners.game.mission
 
+import madpillow.tacticsMiners.InventoryUtils
+import madpillow.tacticsMiners.game.GamePlayer
+import madpillow.tacticsMiners.game.team.GameTeam
 import org.bukkit.Bukkit
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.ItemStack
 
-class MissionListInventory(missionList: MutableList<Mission>) {
+class MissionListInventory(private val holder: GameTeam) {
     companion object {
         const val inventoryName = "ミッションリスト"
     }
 
-    val inventory = Bukkit.createInventory(null, 27, inventoryName)
+    fun openInventory(gamePlayer: GamePlayer) {
+        val inventory = Bukkit.createInventory(null, InventoryUtils.getInventorySize(holder.missionList.size, 1), inventoryName)
 
-    init {
-        missionList.forEach {
-            val itemStack = ItemStack(Material.PAPER)
-            val itemMeta = itemStack.itemMeta
-            itemMeta?.setDisplayName(it.title + "(${it.nowAmount}/${it.needAmount})")
-            itemMeta?.lore = it.lore
-            if (it.isSuccess) {
-                itemMeta?.addEnchant(Enchantment.LUCK, 1, true)
-            }
-            itemStack.itemMeta = itemMeta
-
-            inventory.addItem(itemStack)
+        holder.missionList.forEach {
+            inventory.addItem(it.getItemStack())
         }
+
+        gamePlayer.player.openInventory(inventory)
     }
 }

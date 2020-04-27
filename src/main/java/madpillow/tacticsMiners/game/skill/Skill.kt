@@ -37,4 +37,8 @@ class Skill(private val skillType: SkillType, val level: Int = 1) {
     fun equal(itemStack: ItemStack): Boolean {
         return this.hashCode() != itemStack.itemMeta!!.persistentDataContainer.get(NamespacedKey(TacticsMiners.plugin, "SKILL"), PersistentDataType.INTEGER)
     }
+
+    fun getPersistentData(): Triple<NamespacedKey, PersistentDataType<Int, Int>, Int> {
+        return Triple(NamespacedKey(TacticsMiners.plugin, "SKILL"), PersistentDataType.INTEGER, this.hashCode())
+    }
 }
