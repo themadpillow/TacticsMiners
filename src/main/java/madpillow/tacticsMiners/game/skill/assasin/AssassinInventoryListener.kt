@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.game.skill.spy
+package madpillow.tacticsMiners.game.skill.assasin
 
 import madpillow.tacticsMiners.TacticsMiners
 import madpillow.tacticsMiners.game.skill.SkillType
@@ -6,11 +6,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.meta.SkullMeta
 
-class SpyInventoryListener : Listener {
+class AssassinInventoryListener : Listener {
     @EventHandler
-    fun onInventoryClickEvent(e: InventoryClickEvent) {
-        if (e.view.title.startsWith(SkillType.SPY.getName())) {
+    fun onInventoryClick(e: InventoryClickEvent) {
+        if (e.view.title != SkillType.ASSASSIN.getName()) {
             return
         }
 
@@ -22,9 +23,9 @@ class SpyInventoryListener : Listener {
         val currentItem = e.currentItem ?: return
         val gamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player) ?: return
         val skill = gamePlayer.skillInventory.skillList.firstOrNull { it.equal(currentItem) } ?: return
-        val gameTeam = TacticsMiners.gameManager.gameTeamList
-                .firstOrNull { it.getColoredWool().type == currentItem.type } ?: return
-
-        skill.perform(gamePlayer, gameTeam)
+        val skullMeta = currentItem.itemMeta as SkullMeta
+        val targetGamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(skullMeta.owningPlayer!! as Player)
+                ?: return
+        skill.perform(gamePlayer, targetGamePlayer)
     }
 }

@@ -1,17 +1,21 @@
 package madpillow.tacticsMiners.game.skill
 
+import madpillow.tacticsMiners.InventoryUtils
 import madpillow.tacticsMiners.config.SkillConfig
 import madpillow.tacticsMiners.game.GamePlayer
 import madpillow.tacticsMiners.game.mission.Mission
+import madpillow.tacticsMiners.game.skill.assasin.AssassinInventory
 import madpillow.tacticsMiners.game.skill.soldier.SoldierInventory
 import madpillow.tacticsMiners.game.skill.spy.SpyInventory
 import madpillow.tacticsMiners.game.skill.steal.StealInventory
 import madpillow.tacticsMiners.game.team.GameTeam
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 enum class SkillType(val maxLevel: Int) {
-    FAST_DIGGING(3), SPEED(3), ENCOURAGE(2), STEAL(1), SOLDIER(1), SPY(1);
+    FAST_DIGGING(3), SPEED(3), ENCOURAGE(2), STEAL(1), SOLDIER(1), SPY(1), ASSASSIN(1);
 
     fun getName(level: Int = 1): String {
         return when (this) {
@@ -21,6 +25,7 @@ enum class SkillType(val maxLevel: Int) {
             STEAL -> "強奪カード"
             SOLDIER -> "騎士カード"
             SPY -> "スパイカード"
+            ASSASSIN -> "暗殺カード"
         }
     }
 
@@ -55,6 +60,11 @@ enum class SkillType(val maxLevel: Int) {
             SPY -> mutableListOf(
                     "相手の納品済み鉱石や納品済みのミッションを確認することが出来る"
             )
+            ASSASSIN -> mutableListOf(
+                    "指定した相手を暗殺することが出来る",
+                    "暗殺成功した場合は納品していないインベントリに入っている鉱石を貰える",
+                    "暗殺に失敗した場合は何かしらのペナルティを受ける"
+            )
         }
     }
 
@@ -65,9 +75,10 @@ enum class SkillType(val maxLevel: Int) {
             ENCOURAGE -> {
                 perform(gamePlayer, skill)
             }
-            STEAL -> gamePlayer.player.openInventory(StealInventory(gamePlayer.gameTeam!!, skill).inventory)
-            SOLDIER -> SoldierInventory(gamePlayer).openSelectInventory()
-            SPY -> SpyInventory(gamePlayer.gameTeam!!, skill)
+            STEAL -> StealInventory(gamePlayer, skill).openInventory()
+            SOLDIER -> SoldierInventory(gamePlayer, skill).openSelectInventory()
+            SPY -> SpyInventory(gamePlayer, skill).openInventory()
+            ASSASSIN -> AssassinInventory(gamePlayer, skill).openInventory()
         }
     }
 
@@ -88,7 +99,20 @@ enum class SkillType(val maxLevel: Int) {
                     (target as GamePlayer).soldier = gamePlayer
                 }
             }
-            SPY -> TODO()
+            SPY -> {
+                val gameTeam = target as GameTeam
+                val inventory = Bukkit.createInventory(gamePlayer.player, InventoryUtils.getInventorySize(gameTeam.missionList.size, 1),
+                        "${SPY.getName()}(${gameTeam.teamColor.getChatColor()}$gameTeam${ChatColor.RESET}のミッション)")
+                gameTeam.missionList.forEach {
+                    inventory.addItem(it.getItemStack())
+                }
+
+                gamePlayer.player.openInventory(inventory)
+            }
+            ASSASSIN -> {
+                target as GamePlayer
+                target.assassinated(gamePlayer)
+            }
         }
     }
 }

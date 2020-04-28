@@ -59,10 +59,10 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
             val targetString = "${holderTeam!!.teamColor.getChatColor()}[${holderTeam!!.teamColor}]${ChatColor.RESET}"
             source.player.sendMessage(TextConfig.getMessage(TextConfigType.FAILED_STEAL_SOURCE, target = targetString))
 
-            val defenceAmount = stealAmount / 2
+            val defenceAmount = (stealAmount + 1) / 2
             holderTeam!!.soldier!!.player.inventory.addItem(ItemStack(material, defenceAmount))
-            holderTeam!!.soldier!!.player.sendMessage(TextConfig.getMessage(TextConfigType.SUCCESS_SOLDIER, source = sourceString, ore = material.toString(), amount = defenceAmount.toString()))
-
+            holderTeam!!.soldier!!.player.sendMessage(TextConfig.getMessage(TextConfigType.SUCCESS_SOLDIER, source = sourceString))
+            holderTeam!!.soldier!!.player.sendMessage(TextConfig.getMessage(TextConfigType.REWARD, ore = material.toString(), amount = defenceAmount.toString()))
             holderTeam!!.soldier = null
             return
         }

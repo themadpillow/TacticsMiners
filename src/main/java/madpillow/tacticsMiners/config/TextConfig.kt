@@ -21,12 +21,18 @@ class TextConfig {
         }
 
         fun getMessage(textConfigType: TextConfigType,
-                       source: String = "source",
-                       target: String = "target",
-                       ore: String = "ore",
-                       amount: String = "amount",
-                       mission: String = "mission"): String {
-            return textConfigType.convertMessage(dataMap[textConfigType]!!, source, target, ore, amount, mission)
+                       target: String = "[TARGET]",
+                       source: String = "[SOURCE]",
+                       ore: String = "[ORE]",
+                       amount: String = "[AMOUNT]",
+                       mission: String = "[MISSION]"): String {
+            return dataMap[textConfigType]!!
+                    .replace("[REWARD]", dataMap[TextConfigType.REWARD]!!)
+                    .replace("[TARGET]", target)
+                    .replace("[SOURCE]", source)
+                    .replace("[ORE]", ore)
+                    .replace("[AMOUNT]", amount)
+                    .replace("[MISSION]", mission)
         }
     }
 }
