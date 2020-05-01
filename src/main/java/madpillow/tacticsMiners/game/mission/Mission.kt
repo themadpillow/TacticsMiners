@@ -81,7 +81,7 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
                             source = sourceString,
                             ore = material.toString(),
                             amount = stealAmount.toString(),
-                            mission = title
+                            content = title
                     )
             )
         }

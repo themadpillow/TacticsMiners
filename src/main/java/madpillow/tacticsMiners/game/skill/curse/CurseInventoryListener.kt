@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.game.skill.assasin
+package madpillow.tacticsMiners.game.skill.curse
 
 import madpillow.tacticsMiners.TacticsMiners
 import madpillow.tacticsMiners.game.skill.SkillType
@@ -8,10 +8,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.SkullMeta
 
-class AssassinInventoryListener : Listener {
+class CurseInventoryListener : Listener {
     @EventHandler
-    fun onInventoryClick(e: InventoryClickEvent) {
-        if (e.view.title != SkillType.ASSASSIN.getName()) {
+    fun onInventoryClickEvent(e: InventoryClickEvent) {
+        if (e.view.title != SkillType.CURSE.getName()) {
             return
         }
 
@@ -28,6 +28,7 @@ class AssassinInventoryListener : Listener {
         val skullMeta = currentItem.itemMeta as SkullMeta
         val targetGamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(skullMeta.owningPlayer!! as Player)
                 ?: return
+
         skill.perform(gamePlayer, targetGamePlayer)
     }
 }

@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.game.skill.assasin
+package madpillow.tacticsMiners.game.skill.shuffle
 
 import madpillow.tacticsMiners.TacticsMiners
 import madpillow.tacticsMiners.game.skill.SkillType
@@ -8,10 +8,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.SkullMeta
 
-class AssassinInventoryListener : Listener {
+class ShuffleInventoryListener : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
-        if (e.view.title != SkillType.ASSASSIN.getName()) {
+        if (e.view.title != SkillType.SHUFFLE.getName()) {
             return
         }
 

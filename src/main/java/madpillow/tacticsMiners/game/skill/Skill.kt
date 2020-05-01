@@ -21,7 +21,8 @@ class Skill(private val skillType: SkillType, val level: Int = 1) {
         itemMeta.setDisplayName(skillType.getName(level))
         itemMeta.lore = skillType.getLore(level)
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        itemMeta.persistentDataContainer.set(NamespacedKey(TacticsMiners.plugin, "SKILL"), PersistentDataType.INTEGER, this.hashCode())
+        val (key, data, value) = this.getPersistentData()
+        itemMeta.persistentDataContainer.set(key, data, value)
         this.itemStack.itemMeta = itemMeta
         this.itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1)
     }

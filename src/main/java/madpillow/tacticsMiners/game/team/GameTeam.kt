@@ -5,6 +5,7 @@ import madpillow.tacticsMiners.game.GamePlayer
 import madpillow.tacticsMiners.game.mission.Mission
 import madpillow.tacticsMiners.game.mission.MissionListInventory
 import madpillow.tacticsMiners.game.skill.Skill
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -69,6 +70,10 @@ class GameTeam(val teamColor: TeamColor) {
         itemStack.itemMeta = itemMeta
 
         return itemStack
+    }
+
+    fun getDisplayName(): String {
+        return "${this.teamColor.getChatColor()}[${this.teamColor}]${ChatColor.RESET}"
     }
 
     override fun toString(): String {

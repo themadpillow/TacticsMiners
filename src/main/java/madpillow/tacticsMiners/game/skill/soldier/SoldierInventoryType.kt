@@ -1,12 +1,12 @@
 package madpillow.tacticsMiners.game.skill.soldier
 
 enum class SoldierInventoryType {
-    SELECT, PLAYER;
+    SELECT_TARGET, SELECT_PLAYER;
 
     fun getInventoryTitle():String{
         return when(this){
-            SELECT -> "防衛先指定"
-            PLAYER -> "防衛先指定（未防衛プレイヤー）"
+            SELECT_TARGET -> "防衛先指定"
+            SELECT_PLAYER -> "防衛先指定（未防衛プレイヤー）"
         }
     }
 }
