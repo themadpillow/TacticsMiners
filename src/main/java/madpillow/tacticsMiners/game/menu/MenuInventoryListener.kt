@@ -1,16 +1,15 @@
-package madpillow.tacticsMiners.game.skill
+package madpillow.tacticsMiners.game.menu
 
-import madpillow.tacticsMiners.PlayerUtils
 import madpillow.tacticsMiners.TacticsMiners
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class SkillInventoryListener : Listener {
+class MenuInventoryListener : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
-        if (e.view.title != SkillInventory.inventoryName) {
+        if (e.view.title != MenuInventory.inventoryName) {
             return
         }
 
@@ -20,15 +19,10 @@ class SkillInventoryListener : Listener {
         }
 
         val currentItem = e.currentItem ?: return
-
+        val menuType = MenuType.values().first { it.getMaterial() == currentItem.type }
         val gamePlayer = TacticsMiners.gameManager.getGamePlayerAtPlayer(e.whoClicked as Player)
                 ?: return
 
-        gamePlayer.skillInventory.skillList.forEach { PlayerUtils.sendMessage(gamePlayer, "" + it.hashCode()) }
-        val skill = gamePlayer.skillInventory.skillList.firstOrNull {
-            it.equal(currentItem)
-        } ?: return
-
-        skill.click(gamePlayer)
+        menuType.perform(gamePlayer)
     }
 }

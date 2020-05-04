@@ -4,11 +4,12 @@ import madpillow.tacticsMiners.InventoryUtils
 import madpillow.tacticsMiners.config.SkillConfig
 import madpillow.tacticsMiners.game.GamePlayer
 import madpillow.tacticsMiners.game.mission.Mission
-import madpillow.tacticsMiners.game.skill.Ore.OreType
 import madpillow.tacticsMiners.game.skill.assasin.AssassinInventory
 import madpillow.tacticsMiners.game.skill.curse.CurseInventory
 import madpillow.tacticsMiners.game.skill.curse.CurseType
+import madpillow.tacticsMiners.game.skill.delivery.DeliverySelectTargetInventory
 import madpillow.tacticsMiners.game.skill.mute.MuteInventory
+import madpillow.tacticsMiners.game.skill.ore.OreType
 import madpillow.tacticsMiners.game.skill.shuffle.ShuffleInventory
 import madpillow.tacticsMiners.game.skill.soldier.SoldierSelectTargetInventory
 import madpillow.tacticsMiners.game.skill.spy.SpyInventory
@@ -16,11 +17,12 @@ import madpillow.tacticsMiners.game.skill.steal.StealInventory
 import madpillow.tacticsMiners.game.team.GameTeam
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 enum class SkillType(val maxLevel: Int) {
-    FAST_DIGGING(3), SPEED(3), ENCOURAGE(2), STEAL(1), SOLDIER(1), SPY(1), ASSASSIN(1), CURSE(1), MUTE(1), ORE(3), SHUFFLE(1);
+    FAST_DIGGING(3), SPEED(3), ENCOURAGE(2), STEAL(1), SOLDIER(1), SPY(1), ASSASSIN(1), CURSE(1), MUTE(1), ORE(3), SHUFFLE(1), DELIVERY(1);
 
     fun getName(level: Int = 1): String {
         return when (this) {
@@ -33,8 +35,9 @@ enum class SkillType(val maxLevel: Int) {
             ASSASSIN -> "暗殺カード"
             CURSE -> "呪縛カード"
             MUTE -> "口外禁止令カード"
-            ORE -> "鉱石カード（${OreType.valueOf(level).getDisplayName()}"
+            ORE -> "鉱石カード（${OreType.valueOf(level).getDisplayName()})"
             SHUFFLE -> "シャッフルカード"
+            DELIVERY -> "配達カード"
         }
     }
 
@@ -107,6 +110,9 @@ enum class SkillType(val maxLevel: Int) {
             SHUFFLE -> mutableListOf(
                     "指定した相手のインベントリをごちゃごちゃにシャッフルする"
             )
+            DELIVERY -> mutableListOf(
+                    "指定した相手に任意のブロックを相手に送ることが出来る"
+            )
         }
     }
 
@@ -123,10 +129,11 @@ enum class SkillType(val maxLevel: Int) {
             CURSE -> CurseInventory(gamePlayer, skill).openInventory()
             MUTE -> MuteInventory(gamePlayer, skill).openInventory()
             SHUFFLE -> ShuffleInventory(gamePlayer, skill).openInventory()
+            DELIVERY -> DeliverySelectTargetInventory(gamePlayer, skill).openInventory()
         }
     }
 
-    fun perform(performer: GamePlayer, skill: Skill, target: Any? = null) {
+    fun perform(performer: GamePlayer, skill: Skill, target: Any? = null, content: MutableList<ItemStack>? = null) {
         performer.player.closeInventory()
         performer.skillInventory.removeSkill(skill)
         when (this) {
@@ -138,9 +145,9 @@ enum class SkillType(val maxLevel: Int) {
             }
             SOLDIER -> {
                 if (target is GameTeam) {
-                    target.soldier = performer
+                    target.setSoldier(performer)
                 } else { // target is GamePlayer
-                    (target as GamePlayer).soldier = performer
+                    (target as GamePlayer).setSoldier(performer)
                 }
             }
             SPY -> {
@@ -170,7 +177,11 @@ enum class SkillType(val maxLevel: Int) {
             }
             SHUFFLE -> {
                 target as GamePlayer
-                target.shuffleInventory()
+                target.shuffleInventory(performer)
+            }
+            DELIVERY -> {
+                target as GamePlayer
+                target.delivery(performer, content!!)
             }
         }
     }

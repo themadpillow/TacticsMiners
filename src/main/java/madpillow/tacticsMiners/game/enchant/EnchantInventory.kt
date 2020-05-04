@@ -1,5 +1,6 @@
 package madpillow.tacticsMiners.game.enchant
 
+import madpillow.tacticsMiners.game.GamePlayer
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -20,7 +21,7 @@ class EnchantInventory(enchantLevel: EnchantLevel) {
         }
 
         fun resultShowItem(itemStack: ItemStack?): ItemStack {
-            if (itemStack != null &&
+            return if (itemStack != null &&
                     CanEnchantType.list.contains(itemStack.type)) {
                 val resultItem = ItemStack(itemStack.type)
                 val resultMeta = resultItem.itemMeta!!
@@ -30,25 +31,23 @@ class EnchantInventory(enchantLevel: EnchantLevel) {
                 resultItem.itemMeta = resultMeta
                 resultItem.addUnsafeEnchantment(Enchantment.LUCK, 1)
 
-                return resultItem
+                resultItem
             } else {
-                return nullResultItem
+                nullResultItem
             }
 
         }
     }
 
-    val enchantInventory = Bukkit.createInventory(null, InventoryType.FURNACE, inventoryNamePrefix + "(Level:${enchantLevel.name})")
+    private val inventory = Bukkit.createInventory(null, InventoryType.FURNACE, inventoryNamePrefix + "(Level:${enchantLevel.name})")
 
     init {
-        val bottomItem = ItemStack(Material.PAPER)
-        val bottomMeta = bottomItem.itemMeta!!
-        bottomMeta.setDisplayName("以下からランダムで付与されます")
-        enchantLevel.getEnchantments().forEach { (enchant, level) ->
-            bottomMeta.addEnchant(enchant, level, true)
-        }
-        bottomItem.itemMeta = bottomMeta
-        enchantInventory.setItem(1, bottomItem)
-        enchantInventory.setItem(2, nullResultItem)
+        val bottomItem = enchantLevel.getEnchantmentsItem()
+        inventory.setItem(1, bottomItem)
+        inventory.setItem(2, nullResultItem)
+    }
+
+    fun openInventory(gamePlayer: GamePlayer) {
+        gamePlayer.player.openInventory(inventory)
     }
 }

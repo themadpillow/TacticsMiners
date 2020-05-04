@@ -17,4 +17,17 @@ enum class TeamColor {
             PINK -> ChatColor.LIGHT_PURPLE
         }
     }
+
+    fun getDisplayName(): String {
+        return when (this) {
+            RED -> "${ChatColor.RED}赤"
+            BLUE -> "${ChatColor.BLUE}青"
+            GREEN -> "${ChatColor.GREEN}緑"
+            YELLOW -> "${ChatColor.YELLOW}黄"
+            PURPLE -> "${ChatColor.DARK_PURPLE}紫"
+            AQUA -> "${ChatColor.AQUA}水"
+            GOLD -> "${ChatColor.GOLD}橙"
+            PINK -> "${ChatColor.LIGHT_PURPLE}桃"
+        }
+    }
 }

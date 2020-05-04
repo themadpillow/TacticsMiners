@@ -9,13 +9,13 @@ class DefaultConfig {
         fun init() {
             val config = TacticsMiners.plugin.config
             DefaultConfigType.values().forEach {
-                dataMap[it] = config.get(it.toString())
-                        ?: run {
-                            config.set(it.toString(), it.getDefaultData())
-                            dataMap[it] = it.getDefaultData()
-
-                            TacticsMiners.plugin.saveConfig()
-                        }
+                if (config.get(it.toString()) != null) {
+                    dataMap[it] = config.getInt(it.toString())
+                } else {
+                    config.set(it.toString(), it.getDefaultData())
+                    dataMap[it] = it.getDefaultData()
+                    TacticsMiners.plugin.saveConfig()
+                }
             }
         }
 

@@ -31,7 +31,7 @@ class MissionConfig {
 
         private fun createSampleMission() {
             val configuration = config.getConfig()
-            val mission = Mission(null, "サンプルMISSION", mutableListOf<String>("説明1", "説明2"), Material.DIAMOND, 64)
+            val mission = Mission(null, "サンプルMISSION", mutableListOf("Please DIAMOND x 64", "説明2"), Material.DIAMOND, 64)
             val missionSection = configuration.createSection(mission.title)
             missionSection.set("Lore", mission.lore)
             missionSection.set("Material", mission.material.toString())

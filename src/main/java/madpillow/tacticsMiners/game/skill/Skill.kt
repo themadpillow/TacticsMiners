@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-class Skill(private val skillType: SkillType, val level: Int = 1) {
+class Skill(val skillType: SkillType, val level: Int = 1) {
     val itemStack = ItemStack(Material.PAPER)
 
     init {
         if (level > skillType.maxLevel) {
-            throw RuntimeException("Skillの最大Levelを超えています")
+            throw RuntimeException("Skillの最大Levelを超えています(${skillType.name})")
         }
 
         val itemMeta = this.itemStack.itemMeta!!
@@ -31,12 +31,12 @@ class Skill(private val skillType: SkillType, val level: Int = 1) {
         skillType.click(gamePlayer, this)
     }
 
-    fun perform(gamePlayer: GamePlayer, target: Any) {
-        skillType.perform(gamePlayer, this, target)
+    fun perform(gamePlayer: GamePlayer, target: Any? = null, content: MutableList<ItemStack>? = null) {
+        skillType.perform(gamePlayer, this, target, content)
     }
 
     fun equal(itemStack: ItemStack): Boolean {
-        return this.hashCode() != itemStack.itemMeta!!.persistentDataContainer.get(NamespacedKey(TacticsMiners.plugin, "SKILL"), PersistentDataType.INTEGER)
+        return this.hashCode() == itemStack.itemMeta!!.persistentDataContainer.get(NamespacedKey(TacticsMiners.plugin, "SKILL"), PersistentDataType.INTEGER)
     }
 
     fun getPersistentData(): Triple<NamespacedKey, PersistentDataType<Int, Int>, Int> {

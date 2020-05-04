@@ -1,11 +1,13 @@
 package madpillow.tacticsMiners.config
 
 enum class DefaultConfigType {
-    WorldBorderSize;
+    GAME_TIME,
+    WORLD_BORDER_SIZE;
 
     fun getDefaultData(): Any {
         return when (this) {
-            WorldBorderSize -> 100.0
+            GAME_TIME -> 360
+            WORLD_BORDER_SIZE -> 300.0
         }
     }
 }

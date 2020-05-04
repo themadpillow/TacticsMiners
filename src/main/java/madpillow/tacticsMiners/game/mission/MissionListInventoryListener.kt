@@ -12,13 +12,17 @@ class MissionListInventoryListener : Listener {
         if (e.view.title != MissionListInventory.inventoryName) {
             return
         }
+
+        e.isCancelled = true
         if (e.view.topInventory != e.clickedInventory) {
             return
         }
 
-        val gameTeam = TacticsMiners.gameManager.getGameTeamAtList(e.whoClicked as Player) ?: return
+        val gameTeam = TacticsMiners.gameManager.getGameTeamAtList(e.whoClicked as Player)
+                ?: return
         val itemName = e.currentItem?.itemMeta?.displayName ?: return
-        val mission = gameTeam.missionList.firstOrNull { itemName.startsWith(it.title) } ?: return
+        val mission = gameTeam.missionList.firstOrNull { itemName.startsWith(it.title) }
+                ?: return
         if (!mission.isSuccess) {
             e.whoClicked.openInventory(mission.inventory)
         }

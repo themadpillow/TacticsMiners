@@ -14,9 +14,8 @@ class AllCommand : CommandExecutor {
             return false
         }
 
-        val prefix: String = "${ChatColor.BOLD}" +
-                "[${TacticsMiners.gameManager.getGameTeamAtList(sender as Player)?.teamColor?.toString() ?: run { "未所属" }}" +
-                "<${sender.name}>] ${ChatColor.RESET}"
+        val prefix: String = "[${TacticsMiners.gameManager.getGameTeamAtList(sender as Player)?.getDisplayName() ?: run { "未所属" }}" +
+                "]<${sender.name}> ${ChatColor.RESET}"
         Bukkit.broadcastMessage("$prefix${args.joinToString(separator = " ")}")
 
         return true

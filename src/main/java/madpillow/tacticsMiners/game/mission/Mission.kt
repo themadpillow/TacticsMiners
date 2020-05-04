@@ -28,31 +28,18 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
             inventory.setItem(i, ItemStack(Material.BARRIER))
     }
 
-    fun delivery(itemStack: ItemStack): ItemStack {
-        if (isSuccess
-                || this.material != itemStack.type) {
-            return itemStack
-        }
+    fun success() {
+        this.nowAmount = this.needAmount
+        this.inventory.clear()
+        this.inventory.addItem(ItemStack(this.material, this.needAmount))
+        this.inventory.viewers.filterNotNull().forEach { it.closeInventory() }
 
-        val remain = needAmount - nowAmount
-        return if (remain >= itemStack.amount) {
-            inventory.addItem(itemStack)
-            nowAmount += itemStack.amount
-
-            ItemStack(Material.AIR)
-        } else {
-            inventory.addItem(ItemStack(material, remain))
-            nowAmount = needAmount
-            this.isSuccess = true
-
-            itemStack.amount -= remain
-            itemStack
-        }
+        isSuccess = true
     }
 
     fun steal(source: GamePlayer) {
         val stealAmount = Random.nextInt(nowAmount) + 1
-        if (this.holderTeam!!.soldier != null) {
+        if (this.holderTeam!!.hasSoldier()) {
             val sourceString = "${source.gameTeam?.teamColor?.getChatColor()}[${source.gameTeam?.teamColor}]${source.player.name}${ChatColor.RESET}"
             holderTeam!!.players.forEach { it.player.sendMessage(TextConfig.getMessage(TextConfigType.FAILED_STEAL_TARGET, source = sourceString)) }
 
@@ -60,10 +47,10 @@ class Mission(var holderTeam: GameTeam?, val title: String, val lore: MutableLis
             source.player.sendMessage(TextConfig.getMessage(TextConfigType.FAILED_STEAL_SOURCE, target = targetString))
 
             val defenceAmount = (stealAmount + 1) / 2
-            holderTeam!!.soldier!!.player.inventory.addItem(ItemStack(material, defenceAmount))
-            holderTeam!!.soldier!!.player.sendMessage(TextConfig.getMessage(TextConfigType.SUCCESS_SOLDIER, source = sourceString))
-            holderTeam!!.soldier!!.player.sendMessage(TextConfig.getMessage(TextConfigType.REWARD, ore = material.toString(), amount = defenceAmount.toString()))
-            holderTeam!!.soldier = null
+            holderTeam!!.getSoldier()!!.player.inventory.addItem(ItemStack(material, defenceAmount))
+            holderTeam!!.getSoldier()!!.player.sendMessage(TextConfig.getMessage(TextConfigType.SUCCESS_SOLDIER, source = sourceString))
+            holderTeam!!.getSoldier()!!.player.sendMessage(TextConfig.getMessage(TextConfigType.REWARD, ore = material.toString(), amount = defenceAmount.toString()))
+            holderTeam!!.setSoldier(null)
             return
         }
 

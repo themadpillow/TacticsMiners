@@ -1,4 +1,4 @@
-package madpillow.tacticsMiners.game.skill.Ore
+package madpillow.tacticsMiners.game.skill.ore
 
 import madpillow.tacticsMiners.config.SkillConfig
 import madpillow.tacticsMiners.game.skill.SkillType
@@ -19,7 +19,7 @@ enum class OreType {
         }
     }
 
-    fun getLevel(): Int {
+    private fun getLevel(): Int {
         return when (this) {
             WHITE -> 1
             RED -> 2

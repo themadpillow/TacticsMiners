@@ -2,17 +2,15 @@ name: TacticsMiners
 version: ${project.version}
 main: madpillow.tacticsMiners.TacticsMiners
 api-version: 1.13
-
 commands:
-  check:
-    usage: please use by Player
-    permission: op
   recreate:
     usage: please use by Player
     permission: op
   team:
-    usage: /<command> [Options -> TEAM_SIZE(<SIZE>), RATE(<TRUE/FALSE>)]
+    usage: /<command> [Options -> TEAM_SIZE=<VALUE1~8>]
     permission: op
   start:
     usage: /<command>
     permission: op
+  all:
+    usage: /<command> <MESSAGE>

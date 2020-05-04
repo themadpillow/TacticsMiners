@@ -1,56 +1,100 @@
 package madpillow.tacticsMiners.game
 
+import madpillow.tacticsMiners.ListenerManager
 import madpillow.tacticsMiners.TacticsMiners
-import madpillow.tacticsMiners.WorldUtils
-import madpillow.tacticsMiners.game.mission.MissionInventoryListener
+import madpillow.tacticsMiners.config.DefaultConfig
+import madpillow.tacticsMiners.config.DefaultConfigType
+import madpillow.tacticsMiners.game.bossbar.BossBarUtils
+import madpillow.tacticsMiners.game.menu.MenuItem
+import madpillow.tacticsMiners.game.scoreboard.ScoreBoardUtils
 import madpillow.tacticsMiners.game.team.GameTeam
 import org.bukkit.Bukkit
-import org.bukkit.World
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitRunnable
+import kotlin.random.Random
 
 class GameManager {
-    val worldName = "Game"
-    var gameWorld: World? = null
+    val gameWorld = Bukkit.getWorlds()[0]!!
     val gameTeamList = mutableListOf<GameTeam>()
     val gamePlayerList = mutableListOf<GamePlayer>()
     var isGaming = false
+    private lateinit var listenerManager: ListenerManager
+
+    init {
+        loadGameWorld()
+    }
 
     fun start() {
         isGaming = true
-        // TODO anything
+        gamePlayerList.forEach {
+            it.player.teleport(gameWorld.spawnLocation)
+            it.player.inventory.setItem(8, MenuItem())
 
-        Bukkit.getPluginManager().registerEvents(MissionInventoryListener(), TacticsMiners.plugin)
+            ScoreBoardUtils.createScoreBoard(it)
+        }
+        gameWorld.worldBorder.size = DefaultConfig.getData(DefaultConfigType.WORLD_BORDER_SIZE) as Double
+        BossBarUtils.createBossBar()
+        TimerTask().init()
+
+        listenerManager = ListenerManager()
     }
 
     fun stop() {
-        //TODO anything
-
         isGaming = false
+        BossBarUtils.destroy()
+        gamePlayerList.forEach {
+            it.player.closeInventory()
+            it.player.teleport(gameWorld.spawnLocation)
+        }
+
+        Bukkit.broadcastMessage("[DEBUG]")
+        gameTeamList.forEach {
+            Bukkit.broadcastMessage("${it.getDisplayName()} >> ${it.point}pt")
+        }
+
+        TacticsMiners.plugin.reload()
     }
 
-    fun reCreateGameWorld() {
-        object : BukkitRunnable() {
-            override fun run() {
-                gameWorld = WorldUtils.reCreateWorld(worldName)
-            }
-        }.runTaskLater(TacticsMiners.plugin, 0L)
+    private fun loadGameWorld() {
+        gameWorld.isAutoSave = false
+        gameWorld.pvp = false
+        resetSpawnLocation()
     }
 
-    fun divideTeam(gamePlayerList: MutableList<GamePlayer>, teamSize: Int?) {
+    fun resetSpawnLocation() {
+        gameWorld.loadedChunks.forEach { gameWorld.unloadChunk(it) }
+        var location = Location(gameWorld, Random.nextDouble(10000.0), 100.0, Random.nextDouble(10000.0))
+        while (location.block.type != Material.AIR) {
+            location = location.add(0.0, -1.0, 0.0)
+        }
+
+        gameWorld.spawnLocation = location.add(0.0, 1.0, 0.0)
+    }
+
+    fun divideTeam() {
         var iterator = 0
-        gamePlayerList.forEach { gamePlayer ->
+
+        gamePlayerList.shuffled().forEach { gamePlayer ->
             TacticsMiners.gameManager.gameTeamList[iterator].joinTeam(gamePlayer)
-            if (iterator < teamSize ?: TacticsMiners.gameManager.gameTeamList.size) {
+            if (iterator < TacticsMiners.gameManager.gameTeamList.size) {
                 iterator++
             } else {
                 iterator = 0
             }
         }
+
+        TacticsMiners.gameManager.gameTeamList.filter { it.players.isEmpty() }.forEach {
+            TacticsMiners.gameManager.gameTeamList.remove(it)
+        }
     }
 
     fun getGamePlayerAtPlayer(player: Player): GamePlayer? {
         return gamePlayerList.firstOrNull { it.player == player }
+    }
+
+    fun getHardGamePlayerAtPlayer(player: Player): GamePlayer? {
+        return gamePlayerList.firstOrNull { it.player.name == player.name }
     }
 
     fun getGameTeamAtList(player: Player): GameTeam? {

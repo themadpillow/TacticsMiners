@@ -13,7 +13,7 @@ class SoldierSelectTargetInventory(private val holder: GamePlayer, val skill: Sk
     init {
         val gameTeam = holder.gameTeam!!
         val (key, data, value) = skill.getPersistentData()
-        val teamDefenceItem = if (gameTeam.soldier == null) {
+        val teamDefenceItem = if (!gameTeam.hasSoldier()) {
             val teamItem = gameTeam.getColoredWool()
             val teamItemMeta = teamItem.itemMeta!!
             teamItemMeta.setDisplayName("強奪カードからチームを守る")

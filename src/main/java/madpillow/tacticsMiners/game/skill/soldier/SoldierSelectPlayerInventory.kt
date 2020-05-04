@@ -13,7 +13,7 @@ class SoldierSelectPlayerInventory(val holder: GamePlayer, skill: Skill) {
 
     init {
         val (key, data, value) = skill.getPersistentData()
-        holder.gameTeam!!.players.filter { it != holder }.filter { it.soldier != null }.forEach {
+        holder.gameTeam!!.players.filter { it != holder }.filterNot { it.hasSoldier() }.forEach {
             val skullItem = ItemStack(Material.PLAYER_HEAD)
             val skullMeta = skullItem.itemMeta as SkullMeta
             skullMeta.owningPlayer = it.player

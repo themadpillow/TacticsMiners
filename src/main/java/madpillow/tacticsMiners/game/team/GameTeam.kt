@@ -2,8 +2,10 @@ package madpillow.tacticsMiners.game.team
 
 import madpillow.tacticsMiners.config.MissionConfig
 import madpillow.tacticsMiners.game.GamePlayer
+import madpillow.tacticsMiners.game.bossbar.BossBarUtils
 import madpillow.tacticsMiners.game.mission.Mission
 import madpillow.tacticsMiners.game.mission.MissionListInventory
+import madpillow.tacticsMiners.game.scoreboard.ScoreBoardUtils
 import madpillow.tacticsMiners.game.skill.Skill
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -14,11 +16,12 @@ class GameTeam(val teamColor: TeamColor) {
     val players = mutableListOf<GamePlayer>()
     val missionList = MissionConfig.getMissionList(this)
     val missionListInventory = MissionListInventory(this)
-    var soldier: GamePlayer? = null
+    private var soldier: GamePlayer? = null
+    var point = 0
 
 
     fun getMission(missionName: String): Mission? {
-        return missionList.firstOrNull { mission -> mission.title.contentEquals(missionName) }
+        return missionList.firstOrNull { it.title == missionName }
     }
 
     fun joinTeam(gamePlayer: GamePlayer): Boolean {
@@ -26,7 +29,41 @@ class GameTeam(val teamColor: TeamColor) {
             return false
         }
 
+        gamePlayer.gameTeam = this
+        gamePlayer.player.setPlayerListName("${teamColor.getChatColor()}${gamePlayer.player.name}")
         return players.add(gamePlayer)
+    }
+
+    fun addPoint(add: Int) {
+        val old = this.point
+        this.point += add
+        ScoreBoardUtils.reloadScore(this, old, point)
+        BossBarUtils.reloadTitle()
+    }
+
+    fun reducePoint(reduce: Int) {
+        point -= reduce
+        BossBarUtils.reloadTitle()
+    }
+
+    fun hasSoldier(): Boolean {
+        return soldier != null
+    }
+
+    fun getSoldier(): GamePlayer? {
+        return soldier
+    }
+
+    fun setSoldier(soldier: GamePlayer?): Boolean {
+        if (hasSoldier()) {
+            return false
+        }
+
+        val old = this.soldier
+        this.soldier = soldier
+        ScoreBoardUtils.replaceTeamSoldier(this, old, soldier)
+
+        return true
     }
 
     fun containPlayer(gamePlayer: GamePlayer): Boolean {
@@ -73,10 +110,6 @@ class GameTeam(val teamColor: TeamColor) {
     }
 
     fun getDisplayName(): String {
-        return "${this.teamColor.getChatColor()}[${this.teamColor}]${ChatColor.RESET}"
-    }
-
-    override fun toString(): String {
-        return teamColor.toString()
+        return "${this.teamColor.getChatColor()}[${this.teamColor.getDisplayName()}]${ChatColor.RESET}"
     }
 }

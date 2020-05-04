@@ -14,7 +14,7 @@ import kotlin.random.Random
 class EnchantInventoryListener : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
-        if (e.view.title.startsWith(EnchantInventory.inventoryNamePrefix)) {
+        if (!e.view.title.startsWith(EnchantInventory.inventoryNamePrefix)) {
             return
         }
         if (e.clickedInventory == e.view.topInventory) {
@@ -25,7 +25,8 @@ class EnchantInventoryListener : Listener {
                 if (e.view.topInventory.getItem(2)?.type != Material.BARRIER) {
                     e.isCancelled = true
 
-                    val bottomItemEnchantment = e.view.topInventory.getItem(1)?.enchantments ?: return
+                    val bottomItemEnchantment = e.view.topInventory.getItem(1)?.enchantments
+                            ?: return
                     val item = e.view.topInventory.getItem(0) ?: return
                     val enchant = bottomItemEnchantment.toList()[Random.nextInt(bottomItemEnchantment.size)]
                     item.addEnchantment(enchant.first, enchant.second)
@@ -39,7 +40,6 @@ class EnchantInventoryListener : Listener {
 
         object : BukkitRunnable() {
             override fun run() {
-                println(e.view.topInventory.getItem(0)?.type)
                 e.view.topInventory.setItem(2, EnchantInventory.resultShowItem(e.view.getItem(0)))
             }
         }.runTaskLater(TacticsMiners.plugin, 0L)

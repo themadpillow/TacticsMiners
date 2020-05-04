@@ -5,6 +5,7 @@ import madpillow.tacticsMiners.TacticsMiners
 import madpillow.tacticsMiners.config.SkillConfig
 import madpillow.tacticsMiners.config.TextConfig
 import madpillow.tacticsMiners.config.TextConfigType
+import madpillow.tacticsMiners.game.scoreboard.ScoreBoardUtils
 import madpillow.tacticsMiners.game.skill.SkillInventory
 import madpillow.tacticsMiners.game.skill.SkillType
 import madpillow.tacticsMiners.game.skill.curse.CurseType
@@ -14,15 +15,35 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class GamePlayer(val player: Player) {
+class GamePlayer(var player: Player) {
     var gameTeam: GameTeam? = null
     val skillInventory = SkillInventory(this)
-    var soldier: GamePlayer? = null
+    private var soldier: GamePlayer? = null
     private var jammingSkillTime = 0
     private var jammingChatTime = 0
 
     fun openMissionInventory() {
         gameTeam!!.missionListInventory.openInventory(this)
+    }
+
+    fun hasSoldier(): Boolean {
+        return soldier != null
+    }
+
+    fun getSoldier(): GamePlayer? {
+        return soldier
+    }
+
+    fun setSoldier(soldier: GamePlayer): Boolean {
+        if (hasSoldier()) {
+            return false
+        }
+
+        val old = this.soldier
+        this.soldier = soldier
+        ScoreBoardUtils.replacePlayerSoldier(this, old, soldier)
+
+        return true
     }
 
     fun canUseSkill(): Boolean {
