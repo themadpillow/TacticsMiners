@@ -33,7 +33,7 @@ class GameManager {
 
             ScoreBoardUtils.createScoreBoard(it)
         }
-        gameWorld.worldBorder.size = DefaultConfig.getData(DefaultConfigType.WORLD_BORDER_SIZE) as Double
+        gameWorld.worldBorder.size = DefaultConfig.getData(DefaultConfigType.WORLD_BORDER_SIZE).toString().toDouble()
         BossBarUtils.createBossBar()
         TimerTask().init()
 
